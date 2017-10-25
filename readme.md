@@ -7,7 +7,7 @@ The list of samples code from my latest projects.
  * Django
  * Angular
  * ElasticSearch
- * Wagtail
+
 
 
 

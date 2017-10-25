@@ -1,0 +1,117 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12 mt-3 mb-3">
+      <div class="profile">
+        <div class="profile-heading">
+          <span class="profile-caption p-3">My Profile</span>
+        </div>
+        <div class="row">
+          <div class="col">
+            <span class="profile-caption p-3">General</span>
+          </div>
+        </div>
+        <form #profileForm="ngForm" (submit)="submitForm($event)">
+          <div class="col">
+            <div class="row">
+              <div class="col-md-5">
+                <div class="form-group">
+                  <ot-input label="Full Name"
+                            [serverErrors]="errors?.full_name"
+                            [submitted]="profileForm.submitted"
+                            [control]="form.get('full_name')"></ot-input>
+                </div>
+                <div class="form-group">
+                  <ot-input label="Email"
+                            [serverErrors]="errors?.email"
+                            [submitted]="profileForm.submitted"
+                            [control]="form.get('email')"></ot-input>
+                </div>
+                <div class="form-group">
+                  <ot-input label="Phone"
+                            [serverErrors]="errors?.phone"
+                            [submitted]="profileForm.submitted"
+                            [mask]="phoneMask"
+                            [control]="form.get('phone')"></ot-input>
+                </div>
+              </div>
+              <div class="col-md-6 ml-4">
+                <div class="mt-4">
+                  <ot-pick-photo
+                    name="photoUploader"
+                    [control]="form.get('avatar')"
+                    (onChange)="changePhoto($event)"
+                    [sizeLimit]="2"
+                  >
+                    <ng-template #pickerTemplate let-ctx="ctx">
+                      <div class="d-flex align-items-center">
+                        <div class="avatar-place">
+                          <img [src]="ctx.photo" *ngIf="ctx.photo">
+                          <span [inlineSVG]="'/assets/svg/user.svg'" *ngIf="!ctx.photo"></span>
+                        </div>
+                        <div class="ml-4">
+                          <div>
+                            <label [for]="ctx.name">
+                              <span class="link">Change Photo</span>
+                            </label>
+                            <span class="splitter pl-3 pr-3">|</span>
+                            <span class="link" (click)="ctx.removeFile($event)">Remove</span>
+                          </div>
+                          <div>
+                            <span>JPG, GIF or PNG. Max size of {{ ctx.formatBytes() }}</span>
+                          </div>
+                          <div class="text-danger" *ngIf="ctx.uploadError">{{ ctx.uploadError }}</div>
+                          <input type="file" [id]="ctx.name"
+                                 #fileInput
+                                 (change)="ctx.changeFile($event)">
+                        </div>
+                      </div>
+                    </ng-template>
+                  </ot-pick-photo>
+                </div>
+                <div class="form-group">
+                  <p>Email Notification Settings</p>
+                  <ot-checkbox label="Notify me when a new Rental Application is submitted"
+                               [control]="form.get('send_email_on_application')"></ot-checkbox>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="form-group">
+                  <span class="link" *ngIf="!showPassFields" (click)="openPassSection()">Change password</span>
+                </div>
+              </div>
+            </div>
+            <div class="row" *ngIf="showPassFields">
+              <div class="col password-fields">
+                <button type="button" class="close pr-3" aria-label="Close" *ngIf="showPassFields"
+                        (click)="closePassSection()">
+                  <span aria-hidden="true" [inlineSVG]="'/assets/svg/close.svg'"></span>
+                </button>
+                <div class="row">
+
+                  <div class="col-md-5">
+                    <div class="form-group">
+                      <ot-input [serverErrors]="errors?.current_password" [submitted]="profileForm.current_password" type="password"
+                                label="Current Password"
+                                [control]="form.get('current_password')"></ot-input>
+                    </div>
+                    <div class="form-group">
+                      <ot-input label="New Password" type="password" helpText="Password must contain at least 8 characters and include both letters and digits."
+                                [serverErrors]="errors?.password"
+                                [submitted]="profileForm.password"
+                                [control]="form.get('password')"></ot-input>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="profile-footer">
+            <button type="submit" [ladda]="profileSave" class="btn btn-save m-3">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
